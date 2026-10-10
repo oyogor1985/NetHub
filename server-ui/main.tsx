@@ -460,7 +460,10 @@ function App() {
                     networks={networks}
                     counts={Object.fromEntries([
                       [ALL_NETWORKS, devices.length],
-                      [UNKNOWN_NETWORK, devices.filter(d => networkOf(d) === UNKNOWN_NETWORK).length],
+                      [
+                        UNKNOWN_NETWORK,
+                        devices.filter((d) => networkOf(d) === UNKNOWN_NETWORK).length,
+                      ],
                       ...networks.map((n) => [
                         n.id,
                         devices.filter((d) => networkOf(d) === n.id).length,
@@ -692,6 +695,7 @@ function App() {
             )}
             {view === "floorplan" && (
               <FloorPlanView
+                patterns={state.patterns}
                 devices={devices}
                 plan={state.floorPlan ?? null}
                 canMeasure

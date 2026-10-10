@@ -1262,6 +1262,8 @@ function createWindow() {
   const win = new BrowserWindow({
     ...size,
     center: true,
+    // Configure taskbar identity before Explorer sees the window.
+    show: false,
     backgroundColor: "#0b1120",
     title: "NetHub",
     icon: iconPath(isWindows ? "favicon.ico" : "app-icon.png"),
@@ -1302,7 +1304,7 @@ function createWindow() {
   win.on("unmaximize", rememberWindow);
   win.on("close", rememberWindow);
   win.on("closed", () => clearTimeout(resizeTimer));
-  if (savedWindowState?.maximized) win.maximize();
+
   // Sin barra de menú (File, Edit, View, Window, Help). En desarrollo
   // se pueden abrir las DevTools con Ctrl+Shift+I.
   win.setMenuBarVisibility(false);
@@ -1380,9 +1382,11 @@ app.whenReady().then(async () => {
   createTray();
   const hidden = shouldStartHidden();
   const win = createWindow();
-  if (hidden) win.hide();
   await loadApp(win);
-  if (hidden) win.hide();
+  if (!hidden) {
+    if (savedWindowState?.maximized) win.maximize();
+    win.show();
+  }
   app.on("activate", () => showWindow());
 });
 

@@ -218,7 +218,13 @@ export function HomeTwin({
                       const on = prob === null ? d.status === "online" : prob > 0.5;
                       const threat = !d.trusted && d.isNew;
                       const weird = anomalous.has(d.id);
-                      const tone = threat || weird ? "destructive" : on ? "primary" : "muted";
+                      const tone = threat
+                        ? "destructive"
+                        : weird
+                          ? "warning"
+                          : on
+                            ? "primary"
+                            : "muted";
                       return (
                         <button
                           key={d.id}
@@ -310,7 +316,11 @@ export function HomeTwin({
                             <span
                               className={cn(
                                 "absolute inset-0 rounded-full animate-ping",
-                                tone === "destructive" ? "bg-destructive/50" : "bg-primary/40",
+                                tone === "destructive"
+                                  ? "bg-destructive/50"
+                                  : tone === "warning"
+                                    ? "bg-amber-500/40"
+                                    : "bg-primary/40",
                               )}
                               style={{ animationDuration: `${2 + (h % 20) / 10}s` }}
                             />
@@ -322,6 +332,8 @@ export function HomeTwin({
                                 "border-destructive bg-destructive/20 text-destructive",
                               tone === "primary" &&
                                 "border-primary bg-primary/15 text-primary shadow-[0_0_18px_-2px_var(--color-primary)]",
+                              tone === "warning" &&
+                                "border-amber-500 bg-amber-500/20 text-amber-500",
                               tone === "muted" && "border-border bg-muted text-muted-foreground",
                             )}
                           >
@@ -346,10 +358,10 @@ export function HomeTwin({
               <span className="size-2 rounded-full bg-muted-foreground/40" /> Apagado
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="size-2 rounded-full bg-destructive" />{" "}
-              {monitoringHost === "este PC"
-                ? "Intruso o comportamiento raro"
-                : "Nuevo o comportamiento inusual"}
+              <span className="size-2 rounded-full bg-destructive" /> Intruso
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="size-2 rounded-full bg-amber-500" /> Anomalía
             </span>
             <span>
               {placing
